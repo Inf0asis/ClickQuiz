@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Kind of Media Consumer Are You?</title>
+    <style>
+        body {
+        font-family: 'Open Sans', sans-serif;
+        background-color: #FDA557ff;
+        color: #FEFEFEff;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        }
+        .quiz-container {
+        background-color: #35f048;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 600px;
+        padding: 20px;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        h2 {
+        color: #FEFEFEff;
+        }
+        .answer-btn {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            background: #3498db;
+            color: #FEFEFEff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .answer-btn:hover {
+            background: #FDA557ff;
+        }
+        .feedback {
+            font-size: 16px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .consumer-type {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            background: #3498db;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px auto;
+            display: inline-block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2>What Kind of Media Consumer Are You?</h2>
+        <p class="question" id="question">Loading...</p>
+        <button class="answer-btn" onclick="selectAnswer(0)"></button>
+        <button class="answer-btn" onclick="selectAnswer(1)"></button>
+        <button class="answer-btn" onclick="selectAnswer(2)"></button>
+        <button class="answer-btn" onclick="selectAnswer(3)"></button>
+        <p class="feedback" id="feedback"></p>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "How do you usually get your news?",
+                answers: [
+                    "Traditional news websites or TV 📺",
+                    "Social media (Twitter, TikTok, Instagram) 📱",
+                    "AI-generated summaries 🤖",
+                    "Whatever my friends share 👫"
+                ],
+                scores: ["criticalThinker", "socialScroller", "aiOptimist", "viralBeliever"]
+            },
+            {
+                question: "A shocking headline appears on your feed. What do you do?",
+                answers: [
+                    "Check if it's from a reputable source 🔍",
+                    "Click it immediately and share! 🚀",
+                    "Search for similar articles before deciding 🤔",
+                    "Ask an AI tool if it's real 🤖"
+                ],
+                scores: ["criticalThinker", "viralBeliever", "socialScroller", "aiOptimist"]
+            },
+            {
+                question: "A friend tells you a crazy conspiracy theory. How do you react?",
+                answers: [
+                    "Fact-check it and provide sources 📚",
+                    "Laugh it off but don’t investigate 😆",
+                    "Think it's interesting and share it online 🗣️",
+                    "Let AI analyze its credibility for you 🤖"
+                ],
+                scores: ["criticalThinker", "socialScroller", "viralBeliever", "aiOptimist"]
+            },
+            {
+                question: "How often do you check a source before sharing content?",
+                answers: [
+                    "Every time ✅",
+                    "Sometimes 🤷",
+                    "Rarely, if ever 😬",
+                    "I rely on AI to tell me what's real 🤖"
+                ],
+                scores: ["criticalThinker", "socialScroller", "viralBeliever", "aiOptimist"]
+            },
+            {
+                question: "Which statement best describes your approach to media?",
+                answers: [
+                    "I research everything before forming an opinion 🔍",
+                    "I like to stay updated, but I don't overthink it 📱",
+                    "I trust what seems logical and popular 🔥",
+                    "AI is the future of journalism, and I embrace it 🤖"
+                ],
+                scores: ["criticalThinker", "socialScroller", "viralBeliever", "aiOptimist"]
+            },
+            {
+                question: "How do you react when a celebrity shares a controversial post?",
+                answers: [
+                    "Wait for verified sources before forming an opinion 🔍",
+                    "Comment your thoughts immediately 🗣️",
+                    "Trust it because they’re famous 🌟",
+                    "Use AI tools to see if it’s real 🤖"
+                ],
+                scores: ["criticalThinker", "socialScroller", "viralBeliever", "aiOptimist"]
+            },
+            {
+                question: "You see a viral video about a new 'cure' for common diseases. What’s your first reaction?",
+                answers: [
+                    "Check if scientists support it 🔬",
+                    "Like and share it to raise awareness 👍",
+                    "Believe it—it’s trending! 🚀",
+                    "Use an AI fact-checking tool 🤖"
+                ],
+                scores: ["criticalThinker", "socialScroller", "viralBeliever", "aiOptimist"]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let scoreTally = {
+            criticalThinker: 0,
+            socialScroller: 0,
+            viralBeliever: 0,
+            aiOptimist: 0
+        };
+
+        function loadQuestion() {
+            if (currentQuestion < questions.length) {
+                document.getElementById("question").innerText = questions[currentQuestion].question;
+                const buttons = document.querySelectorAll(".answer-btn");
+                questions[currentQuestion].answers.forEach((answer, index) => {
+                    buttons[index].innerText = answer;
+                    buttons[index].style.display = "block";
+                });
+                document.getElementById("feedback").innerText = "";
+            } else {
+                showFinalResult();
+            }
+        }
+
+        function selectAnswer(index) {
+            let selectedCategory = questions[currentQuestion].scores[index];
+            scoreTally[selectedCategory]++; // Add one point to selected category
+
+            currentQuestion++;
+            setTimeout(loadQuestion, 1000);
+        }
+
+        function showFinalResult() {
+            let highestScore = Math.max(...Object.values(scoreTally));
+            let personalityType = Object.keys(scoreTally).find(key => scoreTally[key] === highestScore);
+
+            let resultTitle = "";
+            let resultDescription = "";
+
+            if (personalityType === "criticalThinker") {
+                resultTitle = "🦉 You are The Critical Thinker!";
+                resultDescription = "You fact-check everything and never fall for clickbait. Your skepticism helps you filter out misinformation, but remember to stay open to new ideas.";
+            } else if (personalityType === "socialScroller") {
+                resultTitle = "📱 You are The Social Scroller!";
+                resultDescription = "You get most of your news from social media. While it's great for quick updates, always verify sources to avoid falling for fake news.";
+            } else if (personalityType === "viralBeliever") {
+                resultTitle = "🔥 You are The Viral Believer!";
+                resultDescription = "You tend to trust and share viral content without verifying it. Be sure to check sources before spreading information online!";
+            } else if (personalityType === "aiOptimist") {
+                resultTitle = "🤖 You are The AI Optimist!";
+                resultDescription = "You embrace AI-generated news and trust technology to filter content. AI is powerful, but always double-check facts with human verification.";
+            }
+
+            document.querySelector(".quiz-container").innerHTML = `
+                <h2>Quiz Complete!</h2>
+                <div class="consumer-type">${resultTitle}</div>
+                <p>${resultDescription}</p>
+            `;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
